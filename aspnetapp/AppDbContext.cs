@@ -1,20 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace aspnetapp
 {
-    public partial class CounterContext : DbContext
+    public partial class AppDbContext : DbContext
     {
-        public CounterContext()
+        public AppDbContext()
         {
         }
-        public DbSet<Counter> Counters { get; set; } = null!;
-        public CounterContext(DbContextOptions<CounterContext> options)
+
+        public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
         {
         }
+
+        // 两个表
+        public DbSet<Employee> Employees { get; set; } = null!;
+        public DbSet<Account> Accounts { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -34,7 +36,11 @@ namespace aspnetapp
         {
             modelBuilder.UseCollation("utf8_general_ci")
                 .HasCharSet("utf8");
-            modelBuilder.Entity<Counter>().ToTable("Counters");
+
+            // 映射到数据库表
+            modelBuilder.Entity<Employee>().ToTable("Employees");
+            modelBuilder.Entity<Account>().ToTable("Accounts");
+
             OnModelCreatingPartial(modelBuilder);
         }
 
